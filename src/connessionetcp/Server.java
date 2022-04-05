@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,25 +25,25 @@ public class Server {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        try{
-        ServerSocket serverSocket=new ServerSocket(2000);
-        System.out.print("Server in ascolto...");
-        Socket socket=serverSocket.accept();
-        BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        buffer.write("hello world\n");
-        buffer.flush();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String msg = reader.readLine();
-        System.out.print(msg);
-        if(msg.equals("SYN")){
-            buffer.write((new Date()).toString() + "\n");
+        try {
+            ServerSocket serverSocket = new ServerSocket(2000);
+            System.out.print("Server in ascolto...");
+            Socket socket = serverSocket.accept();
+            BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            buffer.write("hello world\n");
             buffer.flush();
-        }
-        socket.close();
-        }
-        catch (IOException ex) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String msg = reader.readLine();
+            System.out.print(msg);
+            if (msg.equals("SYN")) {
+                Long timeStamp = System.currentTimeMillis();
+                buffer.write(timeStamp + "\n");
+                buffer.flush();
+            }
+            socket.close();
+        } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }
