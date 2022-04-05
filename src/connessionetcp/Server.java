@@ -43,6 +43,7 @@ public class Server {
             socket.close();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
     }
 
