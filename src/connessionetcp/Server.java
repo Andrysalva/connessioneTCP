@@ -27,7 +27,7 @@ public class Server {
         // TODO code application logic here
         try {
             ServerSocket serverSocket = new ServerSocket(2000);
-            System.out.print("Server in ascolto...");
+            System.out.print("Server in ascolto...\n");
             Socket socket = serverSocket.accept();
             BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             buffer.write("hello world\n");

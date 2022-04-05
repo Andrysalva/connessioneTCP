@@ -37,6 +37,7 @@ public class Client {
             buffer.write("SYN\n");
             buffer.flush();
             msg = reader.readLine();
+            System.out.print(msg + '\n');
             Timestamp sqlTimestamp = new Timestamp(Long.parseLong(msg));
             System.out.print(sqlTimestamp);
             socket.close();
