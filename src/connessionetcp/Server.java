@@ -1,16 +1,11 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package connessionetcp;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,32 +14,71 @@ import java.util.logging.Logger;
  * @author salva
  */
 public class Server {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    ServerSocket serverSock;
+    Socket server;
+    BufferedReader reader;
+    BufferedWriter writer;
+    
+    public Server(int porta) {
         try {
-            ServerSocket serverSocket = new ServerSocket(2000);
-            System.out.print("Server in ascolto...\n");
-            Socket socket = serverSocket.accept();
-            BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            buffer.write("hello world\n");
-            buffer.flush();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String msg = reader.readLine();
-            System.out.print(msg);
-            if (msg.equals("SYN")) {
-                Long timeStamp = System.currentTimeMillis();
-                buffer.write(timeStamp + "\n");
-                buffer.flush();
-            }
-            socket.close();
+            serverSock=new ServerSocket(porta);
         } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    public void attendi() {
+        try {
+            server=serverSock.accept();
+            reader=new BufferedReader(new InputStreamReader(server.getInputStream()));
+            writer=new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void chiusuraServer() {
+        try {
+            serverSock.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void chiusuraConnessione() {
+        try {
+            server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void scrittura() {
+        try {
+            writer.write("Benvenuto!\n");
+            writer.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void lettura() {
+        try {
+            System.out.println(reader.readLine());
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void data() {
+        try {
+            if("date".equals(reader.readLine())) {
+                Long tmStmp = System.currentTimeMillis();
+                writer.write(tmStmp+"\n");
+                writer.flush();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
